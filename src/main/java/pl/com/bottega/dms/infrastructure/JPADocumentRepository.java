@@ -1,0 +1,26 @@
+package pl.com.bottega.dms.infrastructure;
+
+
+import pl.com.bottega.dms.application.DocumentDto;
+import pl.com.bottega.dms.model.Document;
+import pl.com.bottega.dms.model.DocumentNumber;
+import pl.com.bottega.dms.model.DocumentRepository;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+public class JPADocumentRepository implements DocumentRepository {
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Override
+    public void put(Document document) {
+        entityManager.persist(document);
+    }
+
+    @Override
+    public Document get(DocumentNumber documentNumber) {
+        return entityManager.find(Document.class, documentNumber);
+    }
+}
