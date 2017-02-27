@@ -325,7 +325,7 @@ public class DocumentTest {
     }
 
     @Test(expected = DocumentStatusException.class)
-    public void shouldNotDocumentBeConfirmingTwiceByTheSameEmployee() {
+    public void shouldNotAllowConfirmingTwiceByTheSameEmployee() {
         //given
         Document document = given().publishedDocument();
         EmployeeId employeeId = new EmployeeId(1L);
@@ -337,7 +337,7 @@ public class DocumentTest {
     }
 
     @Test(expected = DocumentStatusException.class)
-    public void shouldDocumentCannotBeConfirmedByEmployeeWhoIsNotARecipient() {
+    public void CannotBeConfirmedByEmployeeWhoIsNotARecipient() {
         Document document = given().publishedDocument();
         EmployeeId employeeId = new EmployeeId(2L);
         ConfirmDocumentCommand cmd = new ConfirmDocumentCommand();
@@ -347,7 +347,7 @@ public class DocumentTest {
     }
 
     @Test
-    public void shouldConfirmingProxyAndOwnerBeTwoDiffrentEmployees() {
+    public void ProxyAndOwnerMustBeTwoDiffrent() {
         //given
         Document document = given().publishedDocument();
         EmployeeId employeeId = new EmployeeId(1L);

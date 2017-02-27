@@ -9,6 +9,7 @@ import pl.com.bottega.dms.model.EmployeeId;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,7 +25,11 @@ public class JPADocumentCatalog implements DocumentCatalog {
 
     @Override
     public DocumentDto get(DocumentNumber documentNumber) {
-        Document document = entityManager.find(Document.class, documentNumber);
+        Query query = entityManager.createQuery(
+                "SELECT d FROM Document d LEFT JOIN FETCH d.confirmations WHERE d.number = :number");
+        query.setParameter("number", documentNumber);
+        Document document = (Document) query.getSingleResult();
+
         DocumentDto documentDto = new DocumentDto();
         documentDto.setNumber(documentNumber.getNumber());
         documentDto.setTitle(document.getTitle());
