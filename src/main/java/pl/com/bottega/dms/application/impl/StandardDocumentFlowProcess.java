@@ -59,8 +59,8 @@ public class StandardDocumentFlowProcess implements DocumentFlowProcess {
 
     @Override
     @Transactional
-    public void archive(DocumentNumber documentNumber, EmployeeId employeeId) {
+    public void archive(DocumentNumber documentNumber) {
         Document document = documentRepository.get(documentNumber);
-        document.archive(employeeId);
+        document.archive(new EmployeeId(1L));
     }
 }

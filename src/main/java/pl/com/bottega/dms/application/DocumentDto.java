@@ -4,14 +4,18 @@ package pl.com.bottega.dms.application;
 import pl.com.bottega.dms.model.Confirmation;
 import pl.com.bottega.dms.model.DocumentStatus;
 
+import java.util.List;
 import java.util.Set;
 
 public class DocumentDto {
 
     private String title;
     private String number;
-    private DocumentStatus documentStatus;
-    private Set<ConfirmationDto> confirmations;
+
+    private String content;
+
+    private String status;
+    private List<ConfirmationDto> confirmations;
 
     public String getTitle() {
         return title;
@@ -29,28 +33,27 @@ public class DocumentDto {
         this.number = number;
     }
 
-    public DocumentStatus getDocumentStatus() {
-        return documentStatus;
+    public String getContent() {
+        return content;
     }
 
-    public void setDocumentStatus(DocumentStatus documentStatus) {
-        this.documentStatus = documentStatus;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public Set<ConfirmationDto> getConfirmations() {
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public List<ConfirmationDto> getConfirmations() {
         return confirmations;
     }
 
-    public void setConfirmations(Set<ConfirmationDto> confirmations) {
+    public void setConfirmations(List<ConfirmationDto> confirmations) {
         this.confirmations = confirmations;
     }
-
-    public ConfirmationDto getConfirmation(Long employeeId) {
-        for (ConfirmationDto confirmationDto : confirmations) {
-            if (confirmationDto.getOwner().equals(employeeId))
-                return confirmationDto;
-        }
-        return null;
-    }
-
 }

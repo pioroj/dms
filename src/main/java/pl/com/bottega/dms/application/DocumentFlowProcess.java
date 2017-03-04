@@ -17,6 +17,6 @@ public interface DocumentFlowProcess {
 
     void publish(PublishDocumentCommand cmd);
 
-    void archive(DocumentNumber documentNumber, EmployeeId employeeId);
+    void archive(DocumentNumber documentNumber);
 
 }

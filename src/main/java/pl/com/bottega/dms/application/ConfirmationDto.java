@@ -5,32 +5,41 @@ import java.time.LocalDateTime;
 
 public class ConfirmationDto {
 
-    private Long owner;
-    private Long proxy;
-    private LocalDateTime confirmationDate;
+    private boolean confirmed;
+    private Long ownerEmployeeId;
+    private Long proxyEmployeeId;
+    private LocalDateTime confirmedAt;
 
-    public Long getOwner() {
-        return owner;
+    public boolean isConfirmed() {
+        return confirmed;
     }
 
-    public void setOwner(Long owner) {
-        this.owner = owner;
+    public void setConfirmed(boolean confirmed) {
+        this.confirmed = confirmed;
     }
 
-    public Long getProxy() {
-        return proxy;
+    public Long getOwnerEmployeeId() {
+        return ownerEmployeeId;
     }
 
-    public void setProxy(Long proxy) {
-        this.proxy = proxy;
+    public void setOwnerEmployeeId(Long ownerEmployeeId) {
+        this.ownerEmployeeId = ownerEmployeeId;
     }
 
-    public LocalDateTime getConfirmationDate() {
-        return confirmationDate;
+    public LocalDateTime getConfirmedAt() {
+        return confirmedAt;
     }
 
-    public void setConfirmationDate(LocalDateTime confirmationDate) {
-        this.confirmationDate = confirmationDate;
+    public void setConfirmedAt(LocalDateTime confirmedAt) {
+        this.confirmedAt = confirmedAt;
+    }
+
+    public Long getProxyEmployeeId() {
+        return proxyEmployeeId;
+    }
+
+    public void setProxyEmployeeId(Long proxyEmployeeId) {
+        this.proxyEmployeeId = proxyEmployeeId;
     }
 
 }

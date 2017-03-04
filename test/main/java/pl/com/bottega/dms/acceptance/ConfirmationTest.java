@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import pl.com.bottega.dms.DmsApplication;
-import pl.com.bottega.dms.application.DocumentCatalog;
-import pl.com.bottega.dms.application.DocumentDto;
-import pl.com.bottega.dms.application.DocumentFlowProcess;
-import pl.com.bottega.dms.application.ReadingConfirmator;
+import pl.com.bottega.dms.application.*;
 import pl.com.bottega.dms.model.DocumentNumber;
 import pl.com.bottega.dms.model.EmployeeId;
 import pl.com.bottega.dms.model.commands.ConfirmDocumentCommand;
@@ -28,74 +25,68 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ConfirmationTest {
 
     @Autowired
-    private DocumentCatalog documentCatalog;
+    private DocumentFlowProcess documentFlowProcess;
 
     @Autowired
-    private DocumentFlowProcess documentFlowProcess;
+    private DocumentCatalog documentCatalog;
 
     @Autowired
     private ReadingConfirmator readingConfirmator;
 
     @Test
     public void shouldConfirmDocument() {
-        //given
-        DocumentNumber documentNumber = given().publishedDocument();
-        EmployeeId employeeId = new EmployeeId(1L);
+        // given
+        DocumentNumber documentNumber = publishedDocument();
 
         //when
-        ConfirmDocumentCommand cmd = new ConfirmDocumentCommand();
-        cmd.setEmployeeId(employeeId);
-        cmd.setNumber(documentNumber.getNumber());
-        readingConfirmator.confirm(cmd);
+        ConfirmDocumentCommand confirmDocumentCommand = new ConfirmDocumentCommand();
+        confirmDocumentCommand.setEmployeeId(new EmployeeId(1L));
+        confirmDocumentCommand.setNumber(documentNumber.getNumber());
+        readingConfirmator.confirm(confirmDocumentCommand);
 
         //then
         DocumentDto dto = documentCatalog.get(documentNumber);
         assertThat(dto.getConfirmations().size()).isEqualTo(1);
-        assertThat(dto.getConfirmation(employeeId.getId()).getOwner()).isEqualTo(employeeId.getId());
-        assertThat(dto.getConfirmation(employeeId.getId()).getConfirmationDate()).isNotNull();
+        ConfirmationDto confirmationDto = dto.getConfirmations().get(0);
+        assertThat(confirmationDto.isConfirmed()).isTrue();
+        assertThat(confirmationDto.getOwnerEmployeeId()).isEqualTo(1L);
     }
 
     @Test
-    public void shouldConfirmForDocument() {
-        //given
-        DocumentNumber documentNumber = given().publishedDocument();
-        EmployeeId employeeId = new EmployeeId(1L);
-        EmployeeId employeeId2 = new EmployeeId(2L);
+    public void shouldConfirmDocumentForAnotherEmployee() {
+        // given
+        DocumentNumber documentNumber = publishedDocument();
 
         //when
-        ConfirmForDocumentCommand cmd = new ConfirmForDocumentCommand();
-        cmd.setEmployeeId(employeeId);
-        cmd.setConfirmingEmployeeId(employeeId2);
-        cmd.setNumber(documentNumber.getNumber());
-        readingConfirmator.confirmFor(cmd);
+        ConfirmForDocumentCommand confirmDocumentCommand = new ConfirmForDocumentCommand();
+        confirmDocumentCommand.setEmployeeId(new EmployeeId(1L));
+        confirmDocumentCommand.setConfirmingEmployeeId(new EmployeeId(2L));
+        confirmDocumentCommand.setNumber(documentNumber.getNumber());
+        readingConfirmator.confirmFor(confirmDocumentCommand);
 
         //then
         DocumentDto dto = documentCatalog.get(documentNumber);
         assertThat(dto.getConfirmations().size()).isEqualTo(1);
-        assertThat(dto.getConfirmation(employeeId.getId()).getOwner()).isEqualTo(employeeId.getId());
-        assertThat(dto.getConfirmation(employeeId.getId()).getProxy()).isEqualTo(employeeId2.getId());
-        assertThat(dto.getConfirmation(employeeId.getId()).getConfirmationDate()).isNotNull();
+        ConfirmationDto confirmationDto = dto.getConfirmations().get(0);
+        assertThat(confirmationDto.isConfirmed()).isTrue();
+        assertThat(confirmationDto.getOwnerEmployeeId()).isEqualTo(1L);
+        assertThat(confirmationDto.getProxyEmployeeId()).isEqualTo(2L);
     }
 
-    public DocumentAssembler given() {
-        return new DocumentAssembler();
+    private DocumentNumber publishedDocument() {
+        DocumentNumber documentNumber = createDocument();
+        documentFlowProcess.verify(documentNumber);
+        PublishDocumentCommand publishDocumentCommand = new PublishDocumentCommand();
+        publishDocumentCommand.setNumber(documentNumber.getNumber());
+        publishDocumentCommand.setRecipients(Arrays.asList(new EmployeeId(1L)));
+        documentFlowProcess.publish(publishDocumentCommand);
+        return documentNumber;
     }
 
-    class DocumentAssembler {
-
-        public DocumentNumber publishedDocument() {
-            CreateDocumentCommand createCmd = new CreateDocumentCommand();
-            DocumentNumber documentNumber = documentFlowProcess.create(createCmd);
-            PublishDocumentCommand publishCmd = new PublishDocumentCommand();
-            EmployeeId employeeId = new EmployeeId(1L);
-
-            documentFlowProcess.verify(documentNumber);
-            publishCmd.setNumber(documentNumber.getNumber());
-            publishCmd.setRecipients(Arrays.asList(employeeId));
-            documentFlowProcess.publish(publishCmd);
-            return documentNumber;
-        }
-
+    private DocumentNumber createDocument() {
+        CreateDocumentCommand cmd = new CreateDocumentCommand();
+        cmd.setTitle("test");
+        return documentFlowProcess.create(cmd);
     }
 
 }
