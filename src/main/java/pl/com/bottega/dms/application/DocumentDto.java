@@ -4,6 +4,7 @@ package pl.com.bottega.dms.application;
 import pl.com.bottega.dms.model.Confirmation;
 import pl.com.bottega.dms.model.DocumentStatus;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -14,8 +15,18 @@ public class DocumentDto {
 
     private String content;
 
+    private LocalDateTime createdAt;
+
     private String status;
     private List<ConfirmationDto> confirmations;
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
     public String getTitle() {
         return title;
