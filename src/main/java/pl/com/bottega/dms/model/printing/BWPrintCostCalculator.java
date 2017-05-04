@@ -1,18 +1,15 @@
 package pl.com.bottega.dms.model.printing;
 
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 import pl.com.bottega.dms.model.Document;
 
 import java.math.BigDecimal;
 
-@Component
-@Qualifier("bw")
 public class BWPrintCostCalculator implements PrintCostCalculator {
 
+    private static final double BLACK_WHITE_PAGE_COST = 0.03;
+
     public BigDecimal calculateCost(Document document) {
-        return new BigDecimal(0);
+        return BigDecimal.valueOf(document.getPagesCount() * BLACK_WHITE_PAGE_COST);
     }
 
 }

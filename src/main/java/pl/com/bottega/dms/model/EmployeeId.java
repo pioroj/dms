@@ -1,22 +1,18 @@
 package pl.com.bottega.dms.model;
 
-
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 @Embeddable
-public class EmployeeId {
+public class EmployeeId implements Serializable {
 
     private Long id;
-
-    EmployeeId(){}
 
     public EmployeeId(Long id) {
         this.id = id;
     }
 
-    public Long getId() {
-        return id;
-    }
+    EmployeeId() {}
 
     @Override
     public boolean equals(Object o) {
@@ -26,11 +22,14 @@ public class EmployeeId {
         EmployeeId that = (EmployeeId) o;
 
         return id.equals(that.id);
-
     }
 
     @Override
     public int hashCode() {
         return id.hashCode();
+    }
+
+    public Long getId() {
+        return id;
     }
 }

@@ -1,11 +1,11 @@
-INSERT INTO Document(number, content, creator_id, status, title, created_at, changed_at)
-VALUES ('0', 'fake fancy content', 1, 'DRAFT', 'Title one', TIMESTAMP '2017-01-01 10:44:00', TIMESTAMP '2017-01-02 10:44:00');
+INSERT INTO DOCUMENT (NUMBER, CONTENT, TITLE, STATUS, CREATOR_ID, CREATED_AT, DOCUMENT_TYPE)
+VALUES ('0', 'test fancy content0', 'test title0', 'DRAFT', 1, TIMESTAMP '2017-01-01 10:44:00', 'MANUAL');
 
-INSERT INTO Document(number, content, creator_id, status, title, created_at, changed_at)
-VALUES ('1', 'second fake content', 2, 'ARCHIVED', 'Title fancy two', TIMESTAMP '2017-01-01 10:54:00', TIMESTAMP '2017-01-02 10:45:00');
+INSERT INTO DOCUMENT (NUMBER, CONTENT, TITLE, STATUS, CREATOR_ID, CREATED_AT, DOCUMENT_TYPE)
+VALUES ('1', 'test content0', 'test fancy title1', 'ARCHIVED', 1, TIMESTAMP '2017-01-01 10:50:00', 'MANUAL');
 
-INSERT INTO Document(number, content, creator_id, status, title, created_at, changed_at)
-VALUES ('fancy', 'third fake content', 3, 'DRAFT', 'Title three', TIMESTAMP '2017-01-02 10:44:00', TIMESTAMP '2017-01-03 10:44:00');
+INSERT INTO DOCUMENT (NUMBER, CONTENT, TITLE, STATUS, CREATOR_ID, CREATED_AT, DOCUMENT_TYPE)
+VALUES ('fancy', 'test content1', 'test title0', 'DRAFT', 2, TIMESTAMP '2017-01-02 10:44:00', 'QUALITY_BOOK');
 
-INSERT INTO Document(number, content, creator_id, status, title, created_at, changed_at)
-VALUES ('3', 'fourth fake content', 3, 'DRAFT', 'Title four', TIMESTAMP '2017-01-05 10:44:00', TIMESTAMP '2017-01-05 10:44:00');
+INSERT INTO DOCUMENT (NUMBER, CONTENT, TITLE, STATUS, CREATOR_ID, CREATED_AT, DOCUMENT_TYPE)
+VALUES ('3', 'test content1', 'test title1', 'DRAFT', 2, TIMESTAMP '2017-01-05 10:44:00', 'MANUAL');

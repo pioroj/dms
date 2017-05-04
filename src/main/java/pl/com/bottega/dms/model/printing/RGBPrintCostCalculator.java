@@ -1,18 +1,15 @@
 package pl.com.bottega.dms.model.printing;
 
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 import pl.com.bottega.dms.model.Document;
 
 import java.math.BigDecimal;
 
-@Component
-@Qualifier("rgb")
 public class RGBPrintCostCalculator implements PrintCostCalculator {
 
+    private static final double RGB_PAGE_COST = 0.1;
+
     public BigDecimal calculateCost(Document document) {
-        return null;
+        return BigDecimal.valueOf(document.getPagesCount() * RGB_PAGE_COST);
     }
 
 }

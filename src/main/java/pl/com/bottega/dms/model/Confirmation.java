@@ -1,11 +1,11 @@
 package pl.com.bottega.dms.model;
 
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 public class Confirmation {
+
     @Id
     @GeneratedValue
     private Long id;

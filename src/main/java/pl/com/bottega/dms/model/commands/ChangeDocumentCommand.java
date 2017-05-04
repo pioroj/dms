@@ -1,14 +1,16 @@
 package pl.com.bottega.dms.model.commands;
 
-
 import pl.com.bottega.dms.model.EmployeeId;
 
-public class ChangeDocumentCommand {
+import java.time.LocalDateTime;
 
-    private String number;
+public class ChangeDocumentCommand implements EmployeeAware, Validatable {
+
     private String title;
     private String content;
     private EmployeeId employeeId;
+    private String number;
+    private LocalDateTime expiresAt;
 
     public void setTitle(String title) {
         this.title = title;
@@ -34,11 +36,29 @@ public class ChangeDocumentCommand {
         return employeeId;
     }
 
+    public String getNumber() {
+        return number;
+    }
+
     public void setNumber(String number) {
         this.number = number;
     }
 
-    public String getNumber() {
-        return number;
+    @Override
+    public void validate(ValidationErrors errors) {
+        if (isEmpty(title))
+            errors.add("title", "can't be blank");
+        if (isEmpty(content))
+            errors.add("content", "can't be blank");
+        if (isEmpty(number))
+            errors.add("number", "can't be blank");
+    }
+
+    public void setExpiresAt(LocalDateTime expiresAt) {
+        this.expiresAt = expiresAt;
+    }
+
+    public LocalDateTime getExpiresAt() {
+        return expiresAt;
     }
 }

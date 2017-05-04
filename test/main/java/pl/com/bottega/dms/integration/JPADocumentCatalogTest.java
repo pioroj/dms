@@ -1,5 +1,6 @@
 package pl.com.bottega.dms.integration;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,14 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.com.bottega.dms.application.DocumentQuery;
 import pl.com.bottega.dms.application.DocumentSearchResults;
 import pl.com.bottega.dms.infrastructure.JPADocumentCatalog;
-import pl.com.bottega.dms.infrastructure.JPQLDocumentCatalog;
+import pl.com.bottega.dms.shared.AuthHelper;
 
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.time.Month;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -27,10 +25,18 @@ public class JPADocumentCatalogTest {
     private JPADocumentCatalog catalog;
     //private JPQLDocumentCatalog catalog;
 
+    @Autowired
+    private AuthHelper authHelper;
+
+    @Before
+    public void authenticate() {
+        authHelper.authenticate();
+    }
+
     @Test
     @Sql("/fixtures/documentByPhrase.sql")
     @Transactional
-    public void shouldFindDocumentByPhrase() {
+    public void shouldFindDocumentsByPhrase() {
         //when
         DocumentQuery documentQuery = new DocumentQuery();
         documentQuery.setPhrase("fancy");
@@ -59,26 +65,10 @@ public class JPADocumentCatalogTest {
     @Test
     @Sql("/fixtures/documentByPhrase.sql")
     @Transactional
-    public void shouldFindDocumentByCreatorID() {
+    public void shouldFindDocumentByCreatorId() {
         //when
         DocumentQuery documentQuery = new DocumentQuery();
-        documentQuery.setCreatorId(3L);
-        DocumentSearchResults searchResults = catalog.find(documentQuery);
-
-        //then
-        assertThat(searchResults.getDocuments().size()).isEqualTo(2);
-        assertThat(searchResults.getDocuments().get(0).getNumber()).isEqualTo("3");
-        assertThat(searchResults.getDocuments().get(1).getNumber()).isEqualTo("fancy");
-    }
-
-    @Test
-    @Sql("/fixtures/documentByPhrase.sql")
-    @Transactional
-    public void shouldFindDocumentByCreationDate() {
-        //when
-        DocumentQuery documentQuery = new DocumentQuery();
-        documentQuery.setCreatedAfter(LocalDateTime.of(2017, Month.JANUARY, 1, 6, 1));
-        documentQuery.setCreatedBefore(LocalDateTime.of(2017, Month.JANUARY, 1, 18, 1));
+        documentQuery.setCreatorId(1L);
         DocumentSearchResults searchResults = catalog.find(documentQuery);
 
         //then
@@ -90,12 +80,13 @@ public class JPADocumentCatalogTest {
     @Test
     @Sql("/fixtures/documentByPhrase.sql")
     @Transactional
-    public void shouldFindDocumentByChangeDate() {
+    public void shouldFindDocumentByCreatedAt() {
         //when
         DocumentQuery documentQuery = new DocumentQuery();
-        documentQuery.setChangedAfter(LocalDateTime.of(2017, Month.JANUARY, 2, 10, 10));
-        documentQuery.setChangedBefore(LocalDateTime.of(2017, Month.JANUARY, 2, 11, 11));
+        documentQuery.setCreatedAfter(LocalDateTime.parse("2017-01-01T10:30"));
+        documentQuery.setCreatedBefore(LocalDateTime.parse("2017-01-01T11:00"));
         DocumentSearchResults searchResults = catalog.find(documentQuery);
+
         //then
         assertThat(searchResults.getDocuments().size()).isEqualTo(2);
         assertThat(searchResults.getDocuments().get(0).getNumber()).isEqualTo("0");
@@ -105,7 +96,7 @@ public class JPADocumentCatalogTest {
     @Test
     @Sql("/fixtures/documentByPhrase.sql")
     @Transactional
-    public void shouldReturnPaginatedResult() {
+    public void shouldReturnPaginatedResults() {
         //when
         DocumentQuery documentQuery = new DocumentQuery();
         documentQuery.setPageNumber(2);

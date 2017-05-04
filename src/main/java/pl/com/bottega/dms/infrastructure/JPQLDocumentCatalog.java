@@ -16,7 +16,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-
 @Component
 public class JPQLDocumentCatalog implements DocumentCatalog {
 
@@ -29,7 +28,7 @@ public class JPQLDocumentCatalog implements DocumentCatalog {
 
         String jpqlQuery = "SELECT d FROM Document d LEFT JOIN FETCH d.confirmations ";
         Set<String> predicates = createPredicates(documentQuery);
-        if (!predicates.isEmpty()) {
+        if(!predicates.isEmpty()) {
             String where = " WHERE " + StringUtils.join(predicates, " AND ");
             jpqlQuery += where;
         }
@@ -40,48 +39,35 @@ public class JPQLDocumentCatalog implements DocumentCatalog {
         query.setMaxResults(documentQuery.getPerPage());
         List<Document> documents = query.getResultList();
         List<DocumentDto> dtos = new LinkedList<>();
-        for (Document document : documents) {
+        for (Document document : documents)
             dtos.add(createDocumentDto(document));
-        }
         results.setDocuments(dtos);
         return results;
     }
 
     private void applyPredicateParameters(Query query, DocumentQuery documentQuery) {
-        if (documentQuery.getStatus() != null) {
+        if(documentQuery.getStatus() != null) {
             query.setParameter("status", DocumentStatus.valueOf(documentQuery.getStatus()));
         }
-        if (documentQuery.getCreatorId() != null) {
+        if(documentQuery.getCreatorId() != null) {
             query.setParameter("id", documentQuery.getCreatorId());
         }
-        if (documentQuery.getPhrase() != null) {
+        if(documentQuery.getPhrase() != null) {
             String likeExpression = "%" + documentQuery.getPhrase() + "%";
             query.setParameter("likeExpression", likeExpression);
-        }
-        if (documentQuery.getCreatedAfter() != null) {
-            query.setParameter("createdAfter", documentQuery.getCreatedAfter());
-        }
-        if (documentQuery.getCreatedBefore() != null) {
-            query.setParameter("createdBefore", documentQuery.getCreatedBefore());
         }
     }
 
     private Set<String> createPredicates(DocumentQuery documentQuery) {
         Set<String> predicates = new HashSet<>();
-        if (documentQuery.getStatus() != null) {
+        if(documentQuery.getStatus() != null) {
             predicates.add("d.status = :status");
         }
-        if (documentQuery.getCreatorId() != null) {
+        if(documentQuery.getCreatorId() != null) {
             predicates.add("d.creatorId.id = :id");
         }
-        if (documentQuery.getPhrase() != null) {
+        if(documentQuery.getPhrase() != null) {
             predicates.add("(d.number.number LIKE :likeExpression OR d.content LIKE :likeExpression OR d.title LIKE :likeExpression)");
-        }
-        if (documentQuery.getCreatedAfter() != null) {
-            predicates.add("d.createdAt > :createdAfter");
-        }
-        if (documentQuery.getCreatedBefore() != null) {
-            predicates.add("d.createdAt < :createdBefore");
         }
         return predicates;
     }

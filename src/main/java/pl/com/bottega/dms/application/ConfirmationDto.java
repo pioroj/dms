@@ -1,6 +1,5 @@
 package pl.com.bottega.dms.application;
 
-
 import java.time.LocalDateTime;
 
 public class ConfirmationDto {
@@ -41,5 +40,4 @@ public class ConfirmationDto {
     public void setProxyEmployeeId(Long proxyEmployeeId) {
         this.proxyEmployeeId = proxyEmployeeId;
     }
-
 }

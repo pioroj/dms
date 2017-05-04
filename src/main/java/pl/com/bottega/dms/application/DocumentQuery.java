@@ -1,6 +1,5 @@
 package pl.com.bottega.dms.application;
 
-
 import java.time.LocalDateTime;
 
 public class DocumentQuery {
@@ -10,8 +9,6 @@ public class DocumentQuery {
 
     private LocalDateTime createdAfter;
     private LocalDateTime createdBefore;
-    private LocalDateTime changedAfter;
-    private LocalDateTime changedBefore;
 
     private Long creatorId;
 
@@ -53,22 +50,6 @@ public class DocumentQuery {
         this.createdBefore = createdBefore;
     }
 
-    public LocalDateTime getChangedAfter() {
-        return changedAfter;
-    }
-
-    public void setChangedAfter(LocalDateTime changedAfter) {
-        this.changedAfter = changedAfter;
-    }
-
-    public LocalDateTime getChangedBefore() {
-        return changedBefore;
-    }
-
-    public void setChangedBefore(LocalDateTime changedBefore) {
-        this.changedBefore = changedBefore;
-    }
-
     public Long getCreatorId() {
         return creatorId;
     }
@@ -108,4 +89,5 @@ public class DocumentQuery {
     public void setSortOrder(String sortOrder) {
         this.sortOrder = sortOrder;
     }
+
 }

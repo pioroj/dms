@@ -1,11 +1,8 @@
 package pl.com.bottega.dms.ui;
 
-
 import org.springframework.web.bind.annotation.*;
 import pl.com.bottega.dms.application.*;
-import pl.com.bottega.dms.model.Document;
 import pl.com.bottega.dms.model.DocumentNumber;
-import pl.com.bottega.dms.model.EmployeeId;
 import pl.com.bottega.dms.model.commands.*;
 
 @RestController
@@ -13,12 +10,13 @@ import pl.com.bottega.dms.model.commands.*;
 public class DocumentController {
 
     private DocumentFlowProcess documentFlowProcess;
-    private DocumentCatalog documentCatalog;
     private ReadingConfirmator readingConfirmator;
+    private DocumentCatalog documentCatalog;
 
     public DocumentController(DocumentFlowProcess documentFlowProcess,
                               DocumentCatalog documentCatalog,
-                              ReadingConfirmator readingConfirmator) {
+                              ReadingConfirmator readingConfirmator
+    ) {
         this.documentFlowProcess = documentFlowProcess;
         this.documentCatalog = documentCatalog;
         this.readingConfirmator = readingConfirmator;
@@ -56,24 +54,19 @@ public class DocumentController {
         documentFlowProcess.publish(cmd);
     }
 
-    @PostMapping("/{documentNumber}/archivization")
+    @DeleteMapping("/{documentNumber}/archivization")
     public void archive(@PathVariable String documentNumber) {
         documentFlowProcess.archive(new DocumentNumber(documentNumber));
     }
 
     @PostMapping("/{documentNumber}/confirmation")
     public void confirm(@PathVariable String documentNumber, @RequestBody ConfirmDocumentCommand cmd) {
-        cmd.setEmployeeId(new EmployeeId(15L));
         cmd.setNumber(documentNumber);
         readingConfirmator.confirm(cmd);
     }
 
-    @PostMapping("/{documentNumber}/confirmationFor/{employee}")
-    public void confirmFor(@PathVariable String documentNumber,
-                           @RequestBody ConfirmForDocumentCommand cmd,
-                           @PathVariable String employee) {
-        cmd.setConfirmingEmployeeId(new EmployeeId(1L));
-        cmd.setEmployeeId(new EmployeeId(Long.valueOf(employee)));
+    @PostMapping("/{documentNumber}/proxy-confirmation")
+    public void confirmFor(@PathVariable String documentNumber, @RequestBody ConfirmForDocumentCommand cmd) {
         cmd.setNumber(documentNumber);
         readingConfirmator.confirmFor(cmd);
     }
